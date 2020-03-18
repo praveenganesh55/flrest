@@ -183,8 +183,8 @@ def collect(current_user):
 
     return jsonify({"message": "Successfully stored in Database"})
 
-@app.route('/sports',methods=['GET'])
-def sports():
+@app.route('/sports/<int:param>',methods=['GET'])
+def sports(param):
     newss=News.query.filter_by(category="sports",date=datetime.date.today())
     output=[]
     for news in newss:
@@ -195,10 +195,12 @@ def sports():
         news_data['url'] = news.url
         news_data['content'] = news.content
         output.append(news_data)
+    a = (param * 10) - 9
+    b = (param * 10) + 1
+    return jsonify({"message": output[a:b]})
 
-    return jsonify({"message":output})
-@app.route('/business',methods=['GET'])
-def business():
+@app.route('/business/<int:param>',methods=['GET'])
+def business(param):
     newss=News.query.filter_by(category="business",date=datetime.date.today())
     output=[]
     for news in newss:
@@ -209,10 +211,12 @@ def business():
         news_data['url'] = news.url
         news_data['content'] = news.content
         output.append(news_data)
+    a = (param * 10) - 9
+    b = (param * 10) + 1
+    return jsonify({"message": output[a:b]})
 
-    return jsonify({"message":output})
-@app.route('/entertainment',methods=['GET'])
-def entertainment():
+@app.route('/entertainment/<int:param>',methods=['GET'])
+def entertainment(param):
     newss=News.query.filter_by(category="entertainment",date=datetime.date.today())
     output=[]
     for news in newss:
@@ -223,11 +227,12 @@ def entertainment():
         news_data['url'] = news.url
         news_data['content'] = news.content
         output.append(news_data)
+    a=(param*10)-9
+    b=(param*10)+1
+    return jsonify({"message":output[a:b]})
 
-    return jsonify({"message":output})
-
-@app.route('/technology',methods=['GET'])
-def technology():
+@app.route('/technology/<int:param>',methods=['GET'])
+def technology(param):
     newss=News.query.filter_by(category="technology",date=datetime.date.today())
     output=[]
     for news in newss:
@@ -238,8 +243,10 @@ def technology():
         news_data['url'] = news.url
         news_data['content'] = news.content
         output.append(news_data)
-
-    return jsonify({"message":output})
+    a = (param * 10) - 9
+    b = (param * 10) + 1
+    return jsonify({"message": output[a:b]})
+   
 
 
 
