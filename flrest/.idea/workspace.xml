@@ -2,9 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="04f138fd-cc88-487b-be9b-9f73d1e3186d" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/flrest.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/flrest.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
     </list>
@@ -43,6 +40,10 @@
     <servers />
   </component>
   <component name="WindowStateProjectService">
+    <state x="432" y="201" width="559" height="390" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1584687006900">
+      <screen x="67" y="27" width="1299" height="741" />
+    </state>
+    <state x="432" y="201" width="559" height="390" key="#com.intellij.fileTypes.FileTypeChooser/67.27.1299.741@67.27.1299.741" timestamp="1584687006900" />
     <state x="499" y="154" width="424" height="484" key="FileChooserDialogImpl" timestamp="1584512243285">
       <screen x="67" y="27" width="1299" height="741" />
     </state>
@@ -51,9 +52,9 @@
       <screen x="67" y="27" width="1299" height="741" />
     </state>
     <state x="205" y="31" key="SettingsEditor/67.27.1299.741@67.27.1299.741" timestamp="1584524957471" />
-    <state x="372" y="224" key="com.intellij.ide.util.TipDialog" timestamp="1584518048524">
+    <state x="372" y="224" key="com.intellij.ide.util.TipDialog" timestamp="1584683389512">
       <screen x="67" y="27" width="1299" height="741" />
     </state>
-    <state x="372" y="224" key="com.intellij.ide.util.TipDialog/67.27.1299.741@67.27.1299.741" timestamp="1584518048524" />
+    <state x="372" y="224" key="com.intellij.ide.util.TipDialog/67.27.1299.741@67.27.1299.741" timestamp="1584683389512" />
   </component>
 </project>

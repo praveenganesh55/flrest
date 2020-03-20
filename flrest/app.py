@@ -6,10 +6,11 @@ import jwt
 import datetime
 from functools import wraps
 from newsapi import NewsApiClient
+import os
 
 app = Flask(__name__)
 
-app.config['SECRET KEY']='thisissecretkey'
+app.config['SECRET KEY']=os.environ.get("SECRETKEY")
 app.config['SQLALCHEMY_DATABASE_URI']='postgresql://postgres:test123@localhost/flrest'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -24,12 +25,12 @@ class User(db.Model):
 
 class News(db.Model):
    news_id = db.Column(db.Integer, primary_key=True)
-   author = db.Column(db.String(50))
+   author = db.Column(db.String(200))
    title =  db.Column(db.String(500))
    description =  db.Column(db.String(500))
    url =  db.Column(db.String(500))
    content = db.Column(db.String(1000))
-   category = db.Column(db.String(50))
+   category = db.Column(db.String(200))
    date = db.Column(db.DateTime())
 
 
@@ -148,26 +149,26 @@ def login():
     auth = request.authorization
 
     if not auth or not auth.username or not auth.password:
-        return make_response('Could not verify', 401, {'WWW-Authenticate' : 'Basic realm="Login required!"'})
+        return jsonify({"message":"Could not Verify"})
 
     user = User.query.filter_by(name=auth.username).first()
 
     if not user:
-        return make_response('Could not verify', 401, {'WWW-Authenticate' : 'Basic realm="Login required!"'})
+        return jsonify({"message":"Could not Verify"})
 
     if check_password_hash(user.password, auth.password):
         token = jwt.encode({'public_id' : user.public_id, 'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes=30)}, app.config['SECRET KEY'])
 
         return jsonify({'token' : token.decode('UTF-8')})
 
-    return make_response('Could not verify', 401, {'WWW-Authenticate' : 'Basic realm="Login required!"'})
+    return jsonify({"message":"Could not Verify"})
 
 @app.route('/collect',methods=['GET'])
 @token_required
 def collect(current_user):
     if not current_user.admin:
         return jsonify({'message': 'Cannot perform that function!'})
-    newsapi = NewsApiClient(api_key='ead22b56ea9548bb962ea7a6806a3ba0')
+    newsapi = NewsApiClient(api_key=os.environ.get("APIKEY"))
     lis=["sports","business","technology","entertainment"]
     for k in lis:
      for i in range(1,4):
@@ -183,9 +184,10 @@ def collect(current_user):
 
     return jsonify({"message": "Successfully stored in Database"})
 
-@app.route('/sports/<int:param>',methods=['GET'])
-def sports(param):
-    newss=News.query.filter_by(category="sports",date=datetime.date.today())
+@app.route('/category/<int:num>',methods=['GET'])
+def category(num):
+    cate=request.args['cate']
+    newss=News.query.filter_by(category=cate,date=datetime.date.today())
     output=[]
     for news in newss:
         news_data={}
@@ -195,60 +197,11 @@ def sports(param):
         news_data['url'] = news.url
         news_data['content'] = news.content
         output.append(news_data)
-    a = (param * 10) - 9
-    b = (param * 10) + 1
+    a = (num * 10) - 9
+    b = (num * 10) + 1
     return jsonify({"message": output[a:b]})
 
-@app.route('/business/<int:param>',methods=['GET'])
-def business(param):
-    newss=News.query.filter_by(category="business",date=datetime.date.today())
-    output=[]
-    for news in newss:
-        news_data={}
-        news_data['author'] = news.author
-        news_data['title'] = news.title
-        news_data['description'] = news.description
-        news_data['url'] = news.url
-        news_data['content'] = news.content
-        output.append(news_data)
-    a = (param * 10) - 9
-    b = (param * 10) + 1
-    return jsonify({"message": output[a:b]})
 
-@app.route('/entertainment/<int:param>',methods=['GET'])
-def entertainment(param):
-    newss=News.query.filter_by(category="entertainment",date=datetime.date.today())
-    output=[]
-    for news in newss:
-        news_data={}
-        news_data['author'] = news.author
-        news_data['title'] = news.title
-        news_data['description'] = news.description
-        news_data['url'] = news.url
-        news_data['content'] = news.content
-        output.append(news_data)
-    a=(param*10)-9
-    b=(param*10)+1
-    return jsonify({"message":output[a:b]})
-
-@app.route('/technology/<int:param>',methods=['GET'])
-def technology(param):
-    newss=News.query.filter_by(category="technology",date=datetime.date.today())
-    output=[]
-    for news in newss:
-        news_data={}
-        news_data['author'] = news.author
-        news_data['title'] = news.title
-        news_data['description'] = news.description
-        news_data['url'] = news.url
-        news_data['content'] = news.content
-        output.append(news_data)
-    a = (param * 10) - 9
-    b = (param * 10) + 1
-    return jsonify({"message": output[a:b]})
    
-
-
-
 if __name__=='__main__':
     app.run(debug=True)
