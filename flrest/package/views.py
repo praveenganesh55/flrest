@@ -8,11 +8,13 @@ from functools import wraps
 from newsapi import NewsApiClient
 from flask.views import MethodView
 from .models import User,News,db
+import os
 
 
 
-
-
+def validation(str):
+    if len(str)<7 or len(str)>20:
+        return jsonify ({"message":"Validation error"})
 
 
 def token_required(f):
@@ -68,6 +70,11 @@ class Cuser(MethodView):
             return jsonify({'message' : 'Cannot perform that function!'})
 
         data = request.get_json(force=True)
+        if len(data['password'])<6 or len(data['password'])>20:
+            return jsonify({'message':'validation error'})
+        if len(data['name'])<6 or len(data['name'])>20:
+            return jsonify({'message':'validation error'})
+
         hashed_password = generate_password_hash(data['password'], method='sha256')
 
         new_user = User(public_id=str(uuid.uuid4()), name=data['name'], password=hashed_password, admin=False)
@@ -154,7 +161,7 @@ class Collect(MethodView):
         def get(self,ca):
             if not ca:
                 return jsonify({'message': 'Cannot perform that function!'})
-            newsapi = NewsApiClient(api_key="ead22b56ea9548bb962ea7a6806a3ba0")
+            newsapi = NewsApiClient(api_key=os.environ.get("APIKEY"))
             lis=["sports","business","technology","entertainment"]
             for k in lis:
              for i in range(1,4):
