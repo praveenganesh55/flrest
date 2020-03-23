@@ -58,10 +58,12 @@ class Getall(MethodView):
                 user_data['name'] = user.name
                 user_data['password'] = user.password
                 user_data['admin'] = user.admin
+                user_data['age']=user.age
+                user_data['gender'] = user.gender
                 output.append(user_data)
 
             return jsonify({'users' : output})
-app.add_url_rule('/user',view_func=Getall.as_view('Auser'))
+
 
 class Cuser(MethodView):
     @token_required
@@ -82,7 +84,6 @@ class Cuser(MethodView):
         db.session.commit()
 
         return jsonify({'message' : 'New user created!'})
-app.add_url_rule('/user',view_func=Cuser.as_view('user'))
 
 class Edituser(MethodView):
     @token_required
@@ -105,7 +106,7 @@ class Edituser(MethodView):
         return jsonify({'user': user_data})
 
     @token_required
-    def put(self, ca, public_id):
+    def put(self,ca,public_id):
         if not ca:
             return jsonify({'message': 'Cannot perform that function!'})
 
@@ -113,8 +114,11 @@ class Edituser(MethodView):
 
         if not user:
             return jsonify({'message': 'No user found!'})
+        data = request.get_json(force=True)
 
         user.admin = True
+        user.age = data["age"]
+        user.gender = data["gender"]
         db.session.commit()
 
         return jsonify({'message': 'The user has been promoted!'})
@@ -134,7 +138,6 @@ class Edituser(MethodView):
 
         return jsonify({'message': 'The user has been deleted!'})
 
-app.add_url_rule('/user/<public_id>', view_func=Edituser.as_view('Euser'))
 
 class Login(MethodView):
  def get(self):
@@ -154,7 +157,6 @@ class Login(MethodView):
         return jsonify({'token' : token.decode('UTF-8')})
 
     return jsonify({"message":"Could not Verify"})
-app.add_url_rule('/login',view_func=Login.as_view('login'))
 
 class Collect(MethodView):
         @token_required
@@ -176,7 +178,6 @@ class Collect(MethodView):
 
 
             return jsonify({"message": "Successfully stored in Database"})
-app.add_url_rule('/collect',view_func=Collect.as_view('collect'))
 
 class Category(MethodView):
         @token_required
@@ -197,4 +198,11 @@ class Category(MethodView):
             a = (page * 10) - 9
             b = (page * 10) + 1
             return jsonify({"message": output[a:b]})
+
+
+app.add_url_rule('/user',view_func=Getall.as_view('Auser'))
+app.add_url_rule('/user',view_func=Cuser.as_view('user'))
+app.add_url_rule('/user/<public_id>', view_func=Edituser.as_view('Euser'))
+app.add_url_rule('/login',view_func=Login.as_view('login'))
+app.add_url_rule('/collect',view_func=Collect.as_view('collect'))
 app.add_url_rule('/category',view_func=Category.as_view('category'))
