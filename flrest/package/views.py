@@ -1,38 +1,18 @@
+from package import app
 from flask import Flask, request, jsonify, make_response
-from flask_sqlalchemy import SQLAlchemy
 import uuid
 from werkzeug.security import generate_password_hash, check_password_hash
 import jwt
 import datetime
 from functools import wraps
 from newsapi import NewsApiClient
-import os
 from flask.views import MethodView
+from .models import User,News,db
 
-app = Flask(__name__)
 
-app.config['SECRET KEY']=os.environ.get("SECRETKEY")
-app.config['SQLALCHEMY_DATABASE_URI']='postgresql://postgres:test123@localhost/flrest'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-db = SQLAlchemy(app)
 
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    public_id = db.Column(db.String(50), unique=True)
-    name = db.Column(db.String(50))
-    password = db.Column(db.String(80))
-    admin = db.Column(db.Boolean)
 
-class News(db.Model):
-   news_id = db.Column(db.Integer, primary_key=True)
-   author = db.Column(db.String(200))
-   title =  db.Column(db.String(500))
-   description =  db.Column(db.String(500))
-   url =  db.Column(db.String(500))
-   content = db.Column(db.String(1000))
-   category = db.Column(db.String(200))
-   date = db.Column(db.DateTime())
 
 
 def token_required(f):
@@ -174,7 +154,7 @@ class Collect(MethodView):
         def get(self,ca):
             if not ca:
                 return jsonify({'message': 'Cannot perform that function!'})
-            newsapi = NewsApiClient(api_key=os.environ.get("APIKEY"))
+            newsapi = NewsApiClient(api_key="ead22b56ea9548bb962ea7a6806a3ba0")
             lis=["sports","business","technology","entertainment"]
             for k in lis:
              for i in range(1,4):
@@ -211,7 +191,3 @@ class Category(MethodView):
             b = (page * 10) + 1
             return jsonify({"message": output[a:b]})
 app.add_url_rule('/category',view_func=Category.as_view('category'))
-
-   
-if __name__=='__main__':
-    app.run(debug=True)

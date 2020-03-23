@@ -2,8 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="04f138fd-cc88-487b-be9b-9f73d1e3186d" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.env" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/package/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/package/models.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/package/views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/run.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sample.py" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -23,7 +28,7 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="last_opened_file_path" value="$USER_HOME$/PycharmProjects/flask_rest" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../FLASK--NEWS" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="SvnConfiguration">
@@ -40,21 +45,21 @@
     <servers />
   </component>
   <component name="WindowStateProjectService">
-    <state x="432" y="201" width="559" height="390" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1584687006900">
+    <state x="432" y="201" width="587" height="390" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1584945929665">
       <screen x="67" y="27" width="1299" height="741" />
     </state>
-    <state x="432" y="201" width="559" height="390" key="#com.intellij.fileTypes.FileTypeChooser/67.27.1299.741@67.27.1299.741" timestamp="1584687006900" />
-    <state x="499" y="154" width="424" height="484" key="FileChooserDialogImpl" timestamp="1584689737554">
+    <state x="432" y="201" width="587" height="390" key="#com.intellij.fileTypes.FileTypeChooser/67.27.1299.741@67.27.1299.741" timestamp="1584945929665" />
+    <state x="499" y="154" width="424" height="484" key="FileChooserDialogImpl" timestamp="1584941436404">
       <screen x="67" y="27" width="1299" height="741" />
     </state>
-    <state x="499" y="154" width="424" height="484" key="FileChooserDialogImpl/67.27.1299.741@67.27.1299.741" timestamp="1584689737553" />
+    <state x="499" y="154" width="424" height="484" key="FileChooserDialogImpl/67.27.1299.741@67.27.1299.741" timestamp="1584941436404" />
     <state x="205" y="31" key="SettingsEditor" timestamp="1584524957471">
       <screen x="67" y="27" width="1299" height="741" />
     </state>
     <state x="205" y="31" key="SettingsEditor/67.27.1299.741@67.27.1299.741" timestamp="1584524957471" />
-    <state x="372" y="224" key="com.intellij.ide.util.TipDialog" timestamp="1584683389512">
+    <state x="372" y="224" key="com.intellij.ide.util.TipDialog" timestamp="1584941383786">
       <screen x="67" y="27" width="1299" height="741" />
     </state>
-    <state x="372" y="224" key="com.intellij.ide.util.TipDialog/67.27.1299.741@67.27.1299.741" timestamp="1584683389512" />
+    <state x="372" y="224" key="com.intellij.ide.util.TipDialog/67.27.1299.741@67.27.1299.741" timestamp="1584941383786" />
   </component>
 </project>
