@@ -11,7 +11,6 @@ from .models import User,News,db
 import os
 
 
-
 def validation(str):
     if len(str)<7 or len(str)>20:
         return jsonify ({"message":"Validation error"})
@@ -30,7 +29,6 @@ def token_required(f):
 
         try:
             data = jwt.decode(token, app.config['SECRET KEY'])
-            global current_user
             current_user = User.query.filter_by(public_id=data['public_id']).first()
             global ca
             ca=current_user.admin
@@ -41,35 +39,34 @@ def token_required(f):
 
     return decorated
 
-class Getall(MethodView):
+class Getone(MethodView):
         @token_required
-        def get(self,ca):
+
+
+        def get(self, ca, public_id):
 
             if not ca:
-                return jsonify({'message' : 'Cannot perform that function!'})
+                return jsonify({'message': 'Cannot perform that function!'})
 
-            users = User.query.all()
+            user = User.query.filter_by(public_id=public_id).first()
 
-            output = []
+            if not user:
+                return jsonify({'message': 'No user found!'})
 
-            for user in users:
-                user_data = {}
-                user_data['public_id'] = user.public_id
-                user_data['name'] = user.name
-                user_data['password'] = user.password
-                user_data['admin'] = user.admin
-                user_data['age']=user.age
-                user_data['gender'] = user.gender
-                output.append(user_data)
+            user_data = {}
+            user_data['public_id'] = user.public_id
+            user_data['name'] = user.name
+            user_data['password'] = user.password
+            user_data['admin'] = user.admin
 
-            return jsonify({'users' : output})
+            return jsonify({'user': user_data})
 
 
 class Cuser(MethodView):
-    @token_required
-    def post(self,ca):
-        if not ca:
-            return jsonify({'message' : 'Cannot perform that function!'})
+    #@token_required
+    def post(self):
+        #if not ca:
+         #   return jsonify({'message' : 'Cannot perform that function!'})
 
         data = request.get_json(force=True)
         if len(data['password'])<6 or len(data['password'])>20:
@@ -87,38 +84,40 @@ class Cuser(MethodView):
 
 class Edituser(MethodView):
     @token_required
-    def get(self, ca, public_id):
+    def get(self, ca):
 
         if not ca:
             return jsonify({'message': 'Cannot perform that function!'})
 
-        user = User.query.filter_by(public_id=public_id).first()
+        users = User.query.all()
 
-        if not user:
-            return jsonify({'message': 'No user found!'})
+        output = []
 
-        user_data = {}
-        user_data['public_id'] = user.public_id
-        user_data['name'] = user.name
-        user_data['password'] = user.password
-        user_data['admin'] = user.admin
+        for user in users:
+            user_data = {}
+            user_data['public_id'] = user.public_id
+            user_data['name'] = user.name
+            user_data['password'] = user.password
+            user_data['admin'] = user.admin
+            user_data['age'] = user.age
+            user_data['gender'] = user.gender
+            output.append(user_data)
 
-        return jsonify({'user': user_data})
-
+        return jsonify({'users': output})
     @token_required
-    def put(self,ca,public_id):
-        if not ca:
-            return jsonify({'message': 'Cannot perform that function!'})
+    def put(self):
 
-        user = User.query.filter_by(public_id=public_id).first()
+        token = request.headers['x-access-token']
+        data = jwt.decode(token, app.config['SECRET KEY'])
+        current_user = User.query.filter_by(public_id=data['public_id']).first()
 
-        if not user:
+        if not current_user:
             return jsonify({'message': 'No user found!'})
         data = request.get_json(force=True)
 
-        user.admin = True
-        user.age = data["age"]
-        user.gender = data["gender"]
+        current_user.admin = True
+        current_user.age = data["age"]
+        current_user.gender = data["gender"]
         db.session.commit()
 
         return jsonify({'message': 'The user has been promoted!'})
@@ -200,9 +199,3 @@ class Category(MethodView):
             return jsonify({"message": output[a:b]})
 
 
-app.add_url_rule('/user',view_func=Getall.as_view('Auser'))
-app.add_url_rule('/user',view_func=Cuser.as_view('user'))
-app.add_url_rule('/user/<public_id>', view_func=Edituser.as_view('Euser'))
-app.add_url_rule('/login',view_func=Login.as_view('login'))
-app.add_url_rule('/collect',view_func=Collect.as_view('collect'))
-app.add_url_rule('/category',view_func=Category.as_view('category'))

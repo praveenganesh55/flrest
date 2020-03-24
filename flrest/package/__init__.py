@@ -7,3 +7,4 @@ app = Flask(__name__)
 
 from package import views
 from package import models
+from package import control

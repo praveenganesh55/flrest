@@ -5,8 +5,8 @@ import os
 
 
 app.config['SECRET KEY']=os.environ.get("SECRETKEY")
-app.config['SQLALCHEMY_DATABASE_URI']=os.environ.get("BOOL")
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] =os.environ.get("BOOL1")
+app.config['SQLALCHEMY_DATABASE_URI']='postgresql://postgres:test123@localhost/flrest'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 
 
@@ -28,9 +28,9 @@ class User(db.Model):
 class News(db.Model):
    news_id = db.Column(db.Integer, primary_key=True)
    author = db.Column(db.String(200))
-   title =  db.Column(db.String(500))
-   description =  db.Column(db.String(500))
-   url =  db.Column(db.String(500))
+   title =  db.Column(db.String(1000))
+   description =  db.Column(db.String(1000))
+   url =  db.Column(db.String(1000))
    content = db.Column(db.String(1000))
    category = db.Column(db.String(200))
    date = db.Column(db.DateTime())
