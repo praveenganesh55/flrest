@@ -5,7 +5,7 @@ import os
 
 
 app.config['SECRET KEY']=os.environ.get("SECRETKEY")
-app.config['SQLALCHEMY_DATABASE_URI']='postgresql://postgres:test123@localhost/flrest'
+app.config['SQLALCHEMY_DATABASE_URI']=os.environ.get("BOOL")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 

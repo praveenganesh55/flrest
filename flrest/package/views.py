@@ -30,64 +30,22 @@ def token_required(f):
         try:
             data = jwt.decode(token, app.config['SECRET KEY'])
             current_user = User.query.filter_by(public_id=data['public_id']).first()
-            global ca
-            ca=current_user.admin
+
         except:
             return jsonify({'message' : 'Token is invalid!'}), 401
 
-        return f(current_user, *args, **kwargs)
+        return f(current_user,*args, **kwargs)
 
     return decorated
 
-class Getone(MethodView):
-        @token_required
 
 
-        def get(self, ca, public_id):
 
-            if not ca:
-                return jsonify({'message': 'Cannot perform that function!'})
-
-            user = User.query.filter_by(public_id=public_id).first()
-
-            if not user:
-                return jsonify({'message': 'No user found!'})
-
-            user_data = {}
-            user_data['public_id'] = user.public_id
-            user_data['name'] = user.name
-            user_data['password'] = user.password
-            user_data['admin'] = user.admin
-
-            return jsonify({'user': user_data})
-
-
-class Cuser(MethodView):
-    #@token_required
-    def post(self):
-        #if not ca:
-         #   return jsonify({'message' : 'Cannot perform that function!'})
-
-        data = request.get_json(force=True)
-        if len(data['password'])<6 or len(data['password'])>20:
-            return jsonify({'message':'validation error'})
-        if len(data['name'])<6 or len(data['name'])>20:
-            return jsonify({'message':'validation error'})
-
-        hashed_password = generate_password_hash(data['password'], method='sha256')
-
-        new_user = User(public_id=str(uuid.uuid4()), name=data['name'], password=hashed_password, admin=False)
-        db.session.add(new_user)
-        db.session.commit()
-
-        return jsonify({'message' : 'New user created!'})
 
 class Edituser(MethodView):
-    @token_required
-    def get(self, ca):
+    def get(self):
 
-        if not ca:
-            return jsonify({'message': 'Cannot perform that function!'})
+
 
         users = User.query.all()
 
@@ -105,16 +63,13 @@ class Edituser(MethodView):
 
         return jsonify({'users': output})
     @token_required
-    def put(self):
+    def put(self,current_user):
 
-        token = request.headers['x-access-token']
-        data = jwt.decode(token, app.config['SECRET KEY'])
-        current_user = User.query.filter_by(public_id=data['public_id']).first()
 
         if not current_user:
             return jsonify({'message': 'No user found!'})
         data = request.get_json(force=True)
-
+        
         current_user.admin = True
         current_user.age = data["age"]
         current_user.gender = data["gender"]
@@ -123,34 +78,60 @@ class Edituser(MethodView):
         return jsonify({'message': 'The user has been promoted!'})
 
     @token_required
-    def delete(self, ca, public_id):
-        if not ca:
-            return jsonify({'message': 'Cannot perform that function!'})
+    def delete(self,current_user):
+        token = request.headers['x-access-token']
+        data = jwt.decode(token, app.config['SECRET KEY'])
+        current_user = User.query.filter_by(public_id=data['public_id']).first()
 
-        user = User.query.filter_by(public_id=public_id).first()
 
-        if not user:
+        if not current_user:
             return jsonify({'message': 'No user found!'})
 
-        db.session.delete(user)
+        db.session.delete(current_user)
         db.session.commit()
 
         return jsonify({'message': 'The user has been deleted!'})
 
+    def post(self):
+
+
+        data = request.get_json(force=True)
+        users = User.query.all()
+        output=[]
+        for user in users:
+            output.append(user.name)
+
+        if data["name"] in output :
+            return jsonify({"message":"user already exists"})
+        else:
+
+            if len(data['password'])<6 or len(data['password'])>20:
+                return jsonify({'message':'validation error'})
+            if len(data['name'])<6 or len(data['name'])>20:
+                return jsonify({'message':'validation error'})
+
+            hashed_password = generate_password_hash(data['password'], method='sha256')
+
+            new_user = User(public_id=str(uuid.uuid4()), name=data['name'], password=hashed_password, admin=False)
+            db.session.add(new_user)
+            db.session.commit()
+
+            return jsonify({'message' : 'New user created!'})
+
 
 class Login(MethodView):
  def get(self):
-    auth = request.authorization
+    auth = request.get_json(force=True)
 
-    if not auth or not auth.username or not auth.password:
+    if  not auth["name"] or not auth["password"]:
         return jsonify({"message":"Could not Verify"})
 
-    user = User.query.filter_by(name=auth.username).first()
+    user = User.query.filter_by(name=auth["name"]).first()
 
     if not user:
         return jsonify({"message":"Could not Verify"})
 
-    if check_password_hash(user.password, auth.password):
+    if check_password_hash(user.password, auth["password"]):
         token = jwt.encode({'public_id' : user.public_id, 'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes=30)}, app.config['SECRET KEY'])
 
         return jsonify({'token' : token.decode('UTF-8')})
@@ -159,9 +140,9 @@ class Login(MethodView):
 
 class Collect(MethodView):
         @token_required
-        def get(self,ca):
-            if not ca:
-                return jsonify({'message': 'Cannot perform that function!'})
+        def get(self):
+           # if not ca:
+            #    return jsonify({'message': 'Cannot perform that function!'})
             newsapi = NewsApiClient(api_key=os.environ.get("APIKEY"))
             lis=["sports","business","technology","entertainment"]
             for k in lis:
@@ -180,7 +161,7 @@ class Collect(MethodView):
 
 class Category(MethodView):
         @token_required
-        def get(self,page):
+        def get(self):
             page=request.args['page']
             cate=request.args['cate']
             newss=News.query.filter_by(category=cate,date=datetime.date.today())

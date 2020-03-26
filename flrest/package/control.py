@@ -1,13 +1,12 @@
 from package import app
-from .views import Cuser,Edituser,Login,Collect,Category,Getone
+from .views import Edituser,Login,Collect,Category
 
 
 
 
 
 
-app.add_url_rule('/user/public_id',view_func=Getone.as_view('Auser'))
-app.add_url_rule('/user',view_func=Cuser.as_view('user'))
+
 app.add_url_rule('/user', view_func=Edituser.as_view('Euser'))
 app.add_url_rule('/login',view_func=Login.as_view('login'))
 app.add_url_rule('/collect',view_func=Collect.as_view('collect'))
